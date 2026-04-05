@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.alanzzera.agendador.controller.dto.ProfissionalRequest;
 import com.alanzzera.agendador.controller.dto.ProfissionalResponse;
+import com.alanzzera.agendador.exceptions.BusinessException;
+import com.alanzzera.agendador.exceptions.NotFoundException;
 import com.alanzzera.agendador.infrastructure.entity.Profissional;
 import com.alanzzera.agendador.infrastructure.entity.Servico;
 import com.alanzzera.agendador.infrastructure.repository.ProfissionalRepository;
@@ -30,7 +32,7 @@ public class ProfissionalService {
             .findAllById(request.getServicoIds());
 
         if (servicos.size() != request.getServicoIds().size()) {
-            throw new RuntimeException("Um ou mais serviços não existem");
+            throw new BusinessException("Um ou mais serviços não existem");
         }
 
         profissional.setServicos(servicos);
@@ -51,7 +53,7 @@ public class ProfissionalService {
     // Buscar por ID
     public ProfissionalResponse buscarPorId(Long id) {
         Profissional profissional = profissionalRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
+            .orElseThrow(() -> new NotFoundException("Profissional não encontrado"));
 
         return toResponse(profissional);
     }
@@ -59,7 +61,7 @@ public class ProfissionalService {
     // Atualizar
     public ProfissionalResponse atualizar(Long id, ProfissionalRequest request) {
         Profissional profissional = profissionalRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
+            .orElseThrow(() -> new NotFoundException("Profissional não encontrado"));
         
         profissional.setNome(request.getNome());
         profissional.setEmail(request.getEmail());
@@ -70,7 +72,7 @@ public class ProfissionalService {
             .findAllById(request.getServicoIds());
 
         if (servicos.size() != request.getServicoIds().size()) {
-            throw new RuntimeException("Um ou mais serviços não existem");
+            throw new BusinessException("Um ou mais serviços não existem");
         }
 
         profissional.setServicos(servicos);
@@ -82,7 +84,7 @@ public class ProfissionalService {
     public void deletar(Long id) {
 
         Profissional profissional = profissionalRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
+            .orElseThrow(() -> new NotFoundException("Profissional não encontrado"));
         
         profissionalRepository.delete(profissional);
     }

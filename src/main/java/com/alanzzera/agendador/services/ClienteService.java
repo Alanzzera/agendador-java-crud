@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.alanzzera.agendador.controller.dto.ClienteRequest;
 import com.alanzzera.agendador.controller.dto.ClienteResponse;
+import com.alanzzera.agendador.exceptions.BusinessException;
+import com.alanzzera.agendador.exceptions.NotFoundException;
 import com.alanzzera.agendador.infrastructure.entity.Cliente;
 import com.alanzzera.agendador.infrastructure.repository.ClienteRepository;
 
@@ -38,7 +40,7 @@ public class ClienteService {
     // Buscar por ID
     public ClienteResponse buscarPorId(Long id) {
         Cliente cliente = clienteRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+            .orElseThrow(() -> new NotFoundException("Cliente não encontrado"));
 
         return toResponse(cliente);
     }
@@ -46,7 +48,7 @@ public class ClienteService {
     // Atualizar
     public ClienteResponse atualizar(Long id, ClienteRequest request) {
         Cliente cliente = clienteRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+            .orElseThrow(() -> new NotFoundException("Cliente não encontrado"));
 
         cliente.setNome(request.getNome());
         cliente.setEmail(request.getEmail());
@@ -59,7 +61,7 @@ public class ClienteService {
     public void deletar(Long id) {
 
         Cliente cliente = clienteRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+            .orElseThrow(() -> new NotFoundException("Cliente não encontrado"));
 
         clienteRepository.delete(cliente);
     }

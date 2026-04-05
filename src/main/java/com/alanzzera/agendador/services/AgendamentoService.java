@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.alanzzera.agendador.controller.dto.AgendamentoRequest;
 import com.alanzzera.agendador.controller.dto.AgendamentoResponse;
+import com.alanzzera.agendador.exceptions.BusinessException;
+import com.alanzzera.agendador.exceptions.NotFoundException;
 import com.alanzzera.agendador.infrastructure.entity.Agendamento;
 import com.alanzzera.agendador.infrastructure.entity.Cliente;
 import com.alanzzera.agendador.infrastructure.entity.Profissional;
@@ -29,13 +31,13 @@ public class AgendamentoService {
 
         // Buscar entidades
         Cliente cliente = clienteRepository.findById(request.getClienteId())
-            .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+            .orElseThrow(() -> new NotFoundException("Cliente não encontrado"));
 
         Profissional profissional = profissionalRepository.findById(request.getProfissionalId())
-            .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
+            .orElseThrow(() -> new NotFoundException("Profissional não encontrado"));
 
         Servico servico = servicoRepository.findById(request.getServicoId())
-            .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
+            .orElseThrow(() -> new NotFoundException("Serviço não encontrado"));
 
         // Validar se profissional faz o serviço
         validarServicoDoProfissional(profissional, servico);
@@ -69,7 +71,7 @@ public class AgendamentoService {
     // Buscar por ID
     public AgendamentoResponse buscarPorId(Long id) {
         Agendamento agendamento = agendamentoRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Agendamento não encontrado"));
+            .orElseThrow(() -> new NotFoundException("Agendamento não encontrado"));
 
         return toResponse(agendamento);
     }
@@ -78,16 +80,16 @@ public class AgendamentoService {
     public AgendamentoResponse atualizar(Long id, AgendamentoRequest request) {
         // Buscar entidades
         Agendamento agendamento = agendamentoRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Agendamento não encontrado"));
+            .orElseThrow(() -> new NotFoundException("Agendamento não encontrado"));
 
         Cliente cliente = clienteRepository.findById(request.getClienteId())
-            .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+            .orElseThrow(() -> new NotFoundException("Cliente não encontrado"));
 
         Profissional profissional = profissionalRepository.findById(request.getProfissionalId())
-            .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
+            .orElseThrow(() -> new NotFoundException("Profissional não encontrado"));
 
         Servico servico = servicoRepository.findById(request.getServicoId())
-            .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
+            .orElseThrow(() -> new NotFoundException("Serviço não encontrado"));
 
         // Validar se profissional faz o serviço
         validarServicoDoProfissional(profissional, servico);
@@ -113,14 +115,14 @@ public class AgendamentoService {
     public void deletar(Long id) {
 
         Agendamento agendamento = agendamentoRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Agendamento não encontrado"));
+            .orElseThrow(() -> new NotFoundException("Agendamento não encontrado"));
 
         agendamentoRepository.delete(agendamento);
     }
 
     private void validarServicoDoProfissional(Profissional profissional, Servico servico) {
         if (!profissional.getServicos().contains(servico)) {
-            throw new RuntimeException("Profissional não realiza esse serviço");
+            throw new BusinessException("Profissional não realiza esse serviço");
         }
     }
 
@@ -145,7 +147,7 @@ public class AgendamentoService {
                 .plusMinutes(ag.getServico().getTempoMinutos());
 
             if (inicio.isBefore(fimExistente) && fim.isAfter(inicioExistente)) {
-                throw new RuntimeException("Horário já ocupado");
+                throw new BusinessException("Horário já ocupado");
             }
         }
     }

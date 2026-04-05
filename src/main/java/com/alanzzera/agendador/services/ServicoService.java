@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.alanzzera.agendador.controller.dto.ServicoRequest;
 import com.alanzzera.agendador.controller.dto.ServicoResponse;
+import com.alanzzera.agendador.exceptions.BusinessException;
+import com.alanzzera.agendador.exceptions.NotFoundException;
 import com.alanzzera.agendador.infrastructure.entity.Servico;
 import com.alanzzera.agendador.infrastructure.repository.ServicoRepository;
 
@@ -37,7 +39,7 @@ public class ServicoService {
     // Buscar por ID
     public ServicoResponse buscarPorId(Long id) {
         Servico servico = servicoRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
+            .orElseThrow(() -> new NotFoundException("Serviço não encontrado"));
         
             return toResponse(servico);
     }
@@ -45,7 +47,7 @@ public class ServicoService {
     // Atualizar
     public ServicoResponse atualizar(Long id, ServicoRequest request) {
         Servico servico = servicoRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
+            .orElseThrow(() -> new NotFoundException("Serviço não encontrado"));
         
             servico.setNome(request.getNome());
             servico.setValor(request.getValor());
@@ -59,7 +61,7 @@ public class ServicoService {
     public void deletar(Long id) {
 
         Servico servico = servicoRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
+            .orElseThrow(() -> new NotFoundException("Serviço não encontrado"));
         
         servicoRepository.delete(servico);
     }
