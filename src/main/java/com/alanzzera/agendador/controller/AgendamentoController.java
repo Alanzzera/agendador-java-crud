@@ -3,6 +3,7 @@ package com.alanzzera.agendador.controller;
 import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.alanzzera.agendador.controller.dto.AgendamentoRequest;
 import com.alanzzera.agendador.controller.dto.AgendamentoResponse;
+import com.alanzzera.agendador.controller.dto.StatusDTO;
 import com.alanzzera.agendador.services.AgendamentoService;
 
 import lombok.RequiredArgsConstructor;
@@ -50,5 +52,11 @@ public class AgendamentoController {
     @DeleteMapping("/{id}")
     public void deletar(@PathVariable Long id) {
         agendamentoService.deletar(id);
+    }
+
+    // Atualizar status
+    @PatchMapping("/{id}/status")
+    public void atualizarStatus(@PathVariable Long id, @RequestBody StatusDTO dto) {
+        agendamentoService.atualizarStatus(id, dto.getStatus());
     }
 }

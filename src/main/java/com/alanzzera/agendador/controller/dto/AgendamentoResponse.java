@@ -1,8 +1,9 @@
 package com.alanzzera.agendador.controller.dto;
 
+import java.time.LocalDateTime;
+import com.alanzzera.agendador.infrastructure.entity.enums.AgendamentoStatus;
 import lombok.Getter;
 import lombok.Setter;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -14,4 +15,5 @@ public class AgendamentoResponse {
     private Long servicoId;
     private LocalDateTime dataHoraAgendamento;
     private LocalDateTime dataCadastro;
+    private AgendamentoStatus status;
 }

@@ -1,5 +1,6 @@
 package com.alanzzera.agendador.services;
 
+import java.util.Arrays;
 import java.util.List;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import com.alanzzera.agendador.infrastructure.entity.Agendamento;
 import com.alanzzera.agendador.infrastructure.entity.Cliente;
 import com.alanzzera.agendador.infrastructure.entity.Profissional;
 import com.alanzzera.agendador.infrastructure.entity.Servico;
+import com.alanzzera.agendador.infrastructure.entity.enums.AgendamentoStatus;
 import com.alanzzera.agendador.infrastructure.repository.AgendamentoRepository;
 import com.alanzzera.agendador.infrastructure.repository.ClienteRepository;
 import com.alanzzera.agendador.infrastructure.repository.ProfissionalRepository;
@@ -55,6 +57,7 @@ public class AgendamentoService {
         agendamento.setProfissional(profissional);
         agendamento.setServico(servico);
         agendamento.setDataHoraAgendamento(inicio);
+        agendamento.setStatus(AgendamentoStatus.AGENDADO);
 
         // Salvar
         return toResponse(agendamentoRepository.save(agendamento));
@@ -101,11 +104,15 @@ public class AgendamentoService {
         // Validar conflito
         validarConflito(profissional.getId(), inicio, fim, agendamento.getId());
 
+        // Validar status
+        agendamento.getStatus().validarTransicao(request.getStatus());
+
         // Criar agendamento
         agendamento.setCliente(cliente);
         agendamento.setProfissional(profissional);
         agendamento.setServico(servico);
         agendamento.setDataHoraAgendamento(inicio);
+        agendamento.setStatus(request.getStatus());
 
         // Salvar
         return toResponse(agendamentoRepository.save(agendamento));
@@ -120,6 +127,17 @@ public class AgendamentoService {
         agendamentoRepository.delete(agendamento);
     }
 
+    // Atualiza status
+    public void atualizarStatus(Long id, AgendamentoStatus novoStatus) {
+        Agendamento agendamento = agendamentoRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException("Agendamento não encontrado"));
+
+        agendamento.getStatus().validarTransicao(novoStatus);
+
+        agendamento.setStatus(novoStatus);
+        agendamentoRepository.save(agendamento);
+    }
+
     private void validarServicoDoProfissional(Profissional profissional, Servico servico) {
         if (!profissional.getServicos().contains(servico)) {
             throw new BusinessException("Profissional não realiza esse serviço");
@@ -128,16 +146,19 @@ public class AgendamentoService {
 
     private void validarConflito(Long profissionalId, LocalDateTime inicio, LocalDateTime fim, Long agendamentoId) {
 
+        List<AgendamentoStatus> statusValidos = Arrays.stream(AgendamentoStatus.values())
+            .filter(AgendamentoStatus::bloqueiaHorario)
+            .toList();
+
         List<Agendamento> agendamentos = agendamentoRepository
-            .findByProfissionalId_IdAndDataHoraAgendamentoBetween(
+            .findByProfissionalId_IdAndDataHoraAgendamentoLessThanAndStatusIn(
                 profissionalId,
-                inicio.minusHours(1),
-                fim
+                fim,
+                statusValidos
             );
 
         for (Agendamento ag : agendamentos) {
 
-            // Ignora ele mesmo
             if (agendamentoId != null && ag.getId().equals(agendamentoId)) {
                 continue;
             }
@@ -160,6 +181,7 @@ public class AgendamentoService {
         response.setServicoId(agendamento.getServico().getId());
         response.setDataHoraAgendamento(agendamento.getDataHoraAgendamento());
         response.setDataCadastro(agendamento.getDataCadastro());
+        response.setStatus(agendamento.getStatus());
         return response;
     }
 }

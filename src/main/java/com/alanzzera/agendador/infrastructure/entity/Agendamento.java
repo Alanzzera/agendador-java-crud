@@ -2,8 +2,13 @@ package com.alanzzera.agendador.infrastructure.entity;
 
 import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
+
+import com.alanzzera.agendador.infrastructure.entity.enums.AgendamentoStatus;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -45,4 +50,8 @@ public class Agendamento {
 
     @CreationTimestamp
     private LocalDateTime dataCadastro;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AgendamentoStatus status = AgendamentoStatus.AGENDADO;
 }
