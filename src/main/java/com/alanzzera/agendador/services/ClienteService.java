@@ -19,14 +19,16 @@ public class ClienteService {
     // Criar
     public ClienteResponse criar(ClienteRequest request) {
 
+        if (clienteRepository.existsByEmail(request.getEmail())) {
+            throw new BusinessException("Email já cadastrado");
+        }
+
         Cliente cliente = new Cliente();
         cliente.setNome(request.getNome());
         cliente.setEmail(request.getEmail());
         cliente.setTelefone(request.getTelefone());
 
-        Cliente salvo = clienteRepository.save(cliente);
-
-        return toResponse(salvo);
+        return toResponse(clienteRepository.save(cliente));
     }
 
     // Listar

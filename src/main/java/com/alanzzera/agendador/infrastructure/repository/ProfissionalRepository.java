@@ -5,4 +5,5 @@ import com.alanzzera.agendador.infrastructure.entity.Profissional;
 
 public interface ProfissionalRepository extends JpaRepository<Profissional, Long>{
 
+    boolean existsByEmail(String email);
 }

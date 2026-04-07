@@ -5,4 +5,5 @@ import com.alanzzera.agendador.infrastructure.entity.Servico;
 
 public interface ServicoRepository extends JpaRepository<Servico, Long> {
 
+    boolean existsByNome(String nome);
 }

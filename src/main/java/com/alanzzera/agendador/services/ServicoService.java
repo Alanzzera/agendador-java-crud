@@ -18,6 +18,10 @@ public class ServicoService {
 
     // Criar
     public ServicoResponse criar(ServicoRequest request) {
+        
+        if(servicoRepository.existsByNome(request.getNome())) {
+            throw new BusinessException("Serviço já cadastrado");
+        }
         Servico servico = new Servico();
         servico.setNome(request.getNome());
         servico.setValor(request.getValor());

@@ -22,6 +22,10 @@ public class ProfissionalService {
     // Criar
     public ProfissionalResponse criar(ProfissionalRequest request) {
 
+        if (profissionalRepository.existsByEmail(request.getEmail())) {
+            throw new BusinessException("Email já cadastrado");
+        }
+
         Profissional profissional = new Profissional();
         profissional.setNome(request.getNome());
         profissional.setEmail(request.getEmail());
@@ -37,9 +41,7 @@ public class ProfissionalService {
 
         profissional.setServicos(servicos);
 
-        Profissional salvo = profissionalRepository.save(profissional);
-
-        return toResponse(salvo);
+        return toResponse(profissionalRepository.save(profissional));
     }
 
     // Listar

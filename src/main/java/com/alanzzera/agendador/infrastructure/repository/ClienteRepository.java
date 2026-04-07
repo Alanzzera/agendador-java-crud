@@ -5,4 +5,5 @@ import com.alanzzera.agendador.infrastructure.entity.Cliente;
 
 public interface ClienteRepository extends JpaRepository<Cliente, Long>{
 
+    boolean existsByEmail(String email);
 }
