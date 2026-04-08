@@ -64,7 +64,13 @@ public class ProfissionalService {
     public ProfissionalResponse atualizar(Long id, ProfissionalRequest request) {
         Profissional profissional = profissionalRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("Profissional não encontrado"));
-        
+
+        // Verificar se email já existe em OUTRO profissional
+        if (!profissional.getEmail().equals(request.getEmail()) &&
+            profissionalRepository.existsByEmail(request.getEmail())) {
+            throw new BusinessException("Email já cadastrado");
+        }
+
         profissional.setNome(request.getNome());
         profissional.setEmail(request.getEmail());
         profissional.setTelefone(request.getTelefone());

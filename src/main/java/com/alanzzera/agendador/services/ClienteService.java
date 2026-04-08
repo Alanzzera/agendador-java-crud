@@ -52,6 +52,12 @@ public class ClienteService {
         Cliente cliente = clienteRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("Cliente não encontrado"));
 
+        // Verificar se email já existe em OUTRO cliente
+        if (!cliente.getEmail().equals(request.getEmail()) &&
+            clienteRepository.existsByEmail(request.getEmail())) {
+            throw new BusinessException("Email já cadastrado");
+        }
+
         cliente.setNome(request.getNome());
         cliente.setEmail(request.getEmail());
         cliente.setTelefone(request.getTelefone());

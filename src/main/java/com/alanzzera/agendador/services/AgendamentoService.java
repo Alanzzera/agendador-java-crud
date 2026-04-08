@@ -151,7 +151,7 @@ public class AgendamentoService {
             .toList();
 
         List<Agendamento> agendamentos = agendamentoRepository
-            .findByProfissionalId_IdAndDataHoraAgendamentoLessThanAndStatusIn(
+            .findByProfissional_IdAndDataHoraAgendamentoLessThanAndStatusIn(
                 profissionalId,
                 fim,
                 statusValidos

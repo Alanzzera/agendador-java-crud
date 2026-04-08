@@ -8,19 +8,19 @@ import com.alanzzera.agendador.infrastructure.entity.enums.AgendamentoStatus;
 
 public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> {
 
-    List<Agendamento> findByProfissionalId_IdAndDataHoraAgendamentoBetween(
+    List<Agendamento> findByProfissional_IdAndDataHoraAgendamentoBetween(
         Long profissionalId,
         LocalDateTime inicio,
         LocalDateTime fim
     );
     
-    List<Agendamento> findByProfissionalId_IdAndDataHoraAgendamentoLessThanAndStatusIn(
+    List<Agendamento> findByProfissional_IdAndDataHoraAgendamentoLessThanAndStatusIn(
         Long profissionalId,
         LocalDateTime fim,
         List<AgendamentoStatus> status
     );    
 
-    List<Agendamento> findByProfissionalId_IdAndDataHoraAgendamentoBetweenAndStatusIn(
+    List<Agendamento> findByProfissional_IdAndDataHoraAgendamentoBetweenAndStatusIn(
         Long profissionalId,
         LocalDateTime inicio,
         LocalDateTime fim,

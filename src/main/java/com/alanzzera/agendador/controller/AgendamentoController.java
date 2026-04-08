@@ -18,7 +18,7 @@ import com.alanzzera.agendador.services.AgendamentoService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/agendamento")
+@RequestMapping("/agendamentos")
 @RequiredArgsConstructor
 public class AgendamentoController {
 

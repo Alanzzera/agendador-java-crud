@@ -52,13 +52,19 @@ public class ServicoService {
     public ServicoResponse atualizar(Long id, ServicoRequest request) {
         Servico servico = servicoRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("Serviço não encontrado"));
-        
-            servico.setNome(request.getNome());
-            servico.setValor(request.getValor());
-            servico.setTempoMinutos(request.getTempoMinutos());
-            servico.setDescricao(request.getDescricao());
 
-            return toResponse(servicoRepository.save(servico));
+        // Verificar se nome já existe em OUTRO serviço
+        if (!servico.getNome().equals(request.getNome()) &&
+            servicoRepository.existsByNome(request.getNome())) {
+            throw new BusinessException("Serviço já cadastrado");
+        }
+
+        servico.setNome(request.getNome());
+        servico.setValor(request.getValor());
+        servico.setTempoMinutos(request.getTempoMinutos());
+        servico.setDescricao(request.getDescricao());
+
+        return toResponse(servicoRepository.save(servico));
     }
 
     // Deletar

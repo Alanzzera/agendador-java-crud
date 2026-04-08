@@ -16,7 +16,7 @@ import com.alanzzera.agendador.services.ServicoService;
 
 
 @RestController
-@RequestMapping("/servico")
+@RequestMapping("/servicos")
 @RequiredArgsConstructor
 public class ServicoController {
 
