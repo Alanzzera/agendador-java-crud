@@ -1,6 +1,6 @@
 package com.alanzzera.agendador.infrastructure.entity.enums;
 
-import com.alanzzera.agendador.exceptions.BusinessException;
+import com.alanzzera.agendador.exceptions.business.BusinessException;
 
 public enum AgendamentoStatus {
 

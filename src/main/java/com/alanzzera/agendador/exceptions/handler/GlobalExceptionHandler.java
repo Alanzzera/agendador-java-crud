@@ -1,10 +1,14 @@
-package com.alanzzera.agendador.exceptions;
+package com.alanzzera.agendador.exceptions.handler;
 
 import java.time.LocalDateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import com.alanzzera.agendador.exceptions.business.BusinessException;
+import com.alanzzera.agendador.exceptions.business.NotFoundException;
+import com.alanzzera.agendador.exceptions.dto.ApiError;
+
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice

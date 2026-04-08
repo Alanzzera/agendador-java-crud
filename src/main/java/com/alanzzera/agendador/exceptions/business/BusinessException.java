@@ -1,4 +1,4 @@
-package com.alanzzera.agendador.exceptions;
+package com.alanzzera.agendador.exceptions.business;
 
 public class BusinessException extends RuntimeException{
 

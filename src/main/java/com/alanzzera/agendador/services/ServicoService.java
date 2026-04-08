@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.alanzzera.agendador.controller.dto.ServicoRequest;
 import com.alanzzera.agendador.controller.dto.ServicoResponse;
-import com.alanzzera.agendador.exceptions.BusinessException;
-import com.alanzzera.agendador.exceptions.NotFoundException;
+import com.alanzzera.agendador.exceptions.business.BusinessException;
+import com.alanzzera.agendador.exceptions.business.NotFoundException;
 import com.alanzzera.agendador.infrastructure.entity.Servico;
 import com.alanzzera.agendador.infrastructure.repository.ServicoRepository;
 

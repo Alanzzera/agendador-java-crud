@@ -1,4 +1,4 @@
-package com.alanzzera.agendador.exceptions;
+package com.alanzzera.agendador.exceptions.dto;
 
 import java.time.LocalDateTime;
 import lombok.Getter;
